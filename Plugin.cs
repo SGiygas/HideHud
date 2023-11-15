@@ -203,8 +203,6 @@ namespace HideHud
         }
         public void AddPlayerReference(Reptile.Player player)
         {
-            Debug.Log($"Adding player reference to {player.name}");
-
             // The player list is only relevant for slop crew
             if (!_config.HideSlopCrewNameplates.Value)
             {
@@ -221,8 +219,6 @@ namespace HideHud
             var nameplate = player.interactionCollider.transform.Find("SlopCrew_NameplateContainer");
             if (nameplate != null)
             {
-                Debug.Log($"Nameplate: {nameplate}");
-
                 GameObject nameplateObject = nameplate.gameObject;
                 _nameplates.Add(nameplateObject);
                 nameplateObject.SetActive(_hudIsVisible);

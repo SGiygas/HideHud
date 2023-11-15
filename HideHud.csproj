@@ -4,7 +4,7 @@
     <TargetFramework>net46</TargetFramework>
     <AssemblyName>HideHud</AssemblyName>
     <Description>Allows hiding of individual HUD areas</Description>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
