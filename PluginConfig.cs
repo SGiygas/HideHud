@@ -21,6 +21,7 @@ namespace HideHud
         public ConfigEntry<bool> HideOutfitSelect { get; private set; }
         public ConfigEntry<bool> HideDeathUI { get; private set; }
         public ConfigEntry<bool> HideTaxiUI { get; private set; }
+        public ConfigEntry<bool> HideGraffitiUI { get; private set; }
         public ConfigEntry<bool> HideSlopCrewNameplates { get; private set; }
 
         public PluginConfig(ConfigFile file)
@@ -36,6 +37,7 @@ namespace HideHud
             HideOutfitSelect = file.Bind(ConfigTitle, "Hide Outfit Select UI", false);
             HideDeathUI = file.Bind(ConfigTitle, "Hide Death UI", false);
             HideTaxiUI = file.Bind(ConfigTitle, "Hide Taxi UI", false);
+            HideGraffitiUI = file.Bind(ConfigTitle, "Hide Graffiti UI", true);
             HideSlopCrewNameplates = file.Bind(ConfigTitle, "Hide Slop Crew Nameplates", true);
         }
     }

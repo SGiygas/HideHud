@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using Reptile;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HideHud
@@ -24,6 +25,9 @@ namespace HideHud
         private Canvas _dynamicPhoneCanvas;
         private Canvas _openPhoneCanvas;
         private Canvas _closedPhoneCanvas;
+
+        private List<LineRenderer> _graffitiLines = new List<LineRenderer>();
+        private List<GameObject> _graffitiTargets = new List<GameObject>();
 
         private bool _uiReady = false;
         private bool _phoneReady = false;
@@ -119,6 +123,18 @@ namespace HideHud
                     }
                 }
             }
+
+            if (_config.HideGraffitiUI.Value)
+            {
+                foreach (var gameObject in _graffitiTargets)
+                {
+                    gameObject.SetActive(_hudIsVisible);
+                }
+                foreach (var line in _graffitiLines)
+                {
+                    line.enabled = _hudIsVisible;
+                }
+            }
         }
 
         public void SetMainReferences(Reptile.UIManager uiManager)
@@ -158,6 +174,34 @@ namespace HideHud
             _closedPhoneCanvas = closedPhoneCanvas.GetComponent<Canvas>();
 
             _phoneReady = true;
+        }
+
+        public void AddGraffitiGameReference(Reptile.GraffitiGame game)
+        {
+            var targetParent = game.transform.Find("Targets").gameObject;
+            targetParent.SetActive(_hudIsVisible);
+            _graffitiTargets.Add(targetParent);
+
+            var backgroundCircle = game.transform.Find("BackgroundCircle").gameObject;
+            backgroundCircle.SetActive(_hudIsVisible);
+            _graffitiTargets.Add(backgroundCircle);
+        }
+        public void RemoveGraffitiGameReference(Reptile.GraffitiGame game)
+        {
+            var targetParent = game.transform.Find("Targets").gameObject;
+            _graffitiTargets.Remove(targetParent);
+
+            var backgroundCircle = game.transform.Find("BackgroundCircle").gameObject;
+            _graffitiTargets.Remove(backgroundCircle);
+        }
+        public void AddGraffitiLineReference(LineRenderer line)
+        {
+            _graffitiLines.Add(line);
+            line.enabled = _hudIsVisible;
+        }
+        public void ClearGraffitiLineReferences(Reptile.GraffitiGame game)
+        {
+            _graffitiLines.RemoveAll(line => line.transform.parent == game.transform);
         }
 
         public void SetNotReady()
