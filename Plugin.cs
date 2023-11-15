@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using Reptile;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,8 @@ namespace HideHud
 
         private List<LineRenderer> _graffitiLines = new List<LineRenderer>();
         private List<GameObject> _graffitiTargets = new List<GameObject>();
+
+        private List<GameObject> _nameplates = new List<GameObject>();
 
         private bool _uiReady = false;
         private bool _phoneReady = false;
@@ -113,14 +116,9 @@ namespace HideHud
 
             if (_config.HideSlopCrewNameplates.Value)
             {
-                // Ugly but this is the only way to do it until Slop Crew's API exposes nameplate stuff
-                foreach (Reptile.Player player in FindObjectsOfType<Reptile.Player>())
+                foreach (var nameplate in _nameplates)
                 {
-                    var nameplate = player.interactionCollider.transform.Find("SlopCrew_NameplateContainer");
-                    if (nameplate != null)
-                    {
-                        nameplate.gameObject.SetActive(_hudIsVisible);
-                    }
+                    nameplate.SetActive(_hudIsVisible);
                 }
             }
 
@@ -202,6 +200,48 @@ namespace HideHud
         public void ClearGraffitiLineReferences(Reptile.GraffitiGame game)
         {
             _graffitiLines.RemoveAll(line => line.transform.parent == game.transform);
+        }
+        public void AddPlayerReference(Reptile.Player player)
+        {
+            Debug.Log($"Adding player reference to {player.name}");
+
+            // The player list is only relevant for slop crew
+            if (!_config.HideSlopCrewNameplates.Value)
+            {
+                return;
+            }
+
+            // We have to wait until the end of the current frame because the nameplate doesn't exist on initialization
+            StartCoroutine(SetInitialNameplateState(player));
+        }
+        private IEnumerator SetInitialNameplateState(Reptile.Player player)
+        {
+            yield return new WaitForEndOfFrame();
+
+            var nameplate = player.interactionCollider.transform.Find("SlopCrew_NameplateContainer");
+            if (nameplate != null)
+            {
+                Debug.Log($"Nameplate: {nameplate}");
+
+                GameObject nameplateObject = nameplate.gameObject;
+                _nameplates.Add(nameplateObject);
+                nameplateObject.SetActive(_hudIsVisible);
+            }
+        }
+        public void RemovePlayerReference(Reptile.Player player)
+        {
+            // The player list is only relevant for slop crew
+            if (!_config.HideSlopCrewNameplates.Value)
+            {
+                return;
+            }
+
+            var nameplate = player.interactionCollider.transform.Find("SlopCrew_NameplateContainer");
+            if (nameplate != null)
+            {
+                GameObject nameplateObject = nameplate.gameObject;
+                _nameplates.Remove(nameplateObject);
+            }
         }
 
         public void SetNotReady()
