@@ -70,7 +70,10 @@ namespace HideHud
             {
                 _pauseUI.alpha = alpha;
             }
-            _effectsUI.alpha = alpha;
+            if (_config.HideScreenEffects.Value)
+            {
+                _effectsUI.alpha = alpha;
+            }
             _gameplayUI.alpha = alpha;
             if (_config.HideDialogue.Value)
             {

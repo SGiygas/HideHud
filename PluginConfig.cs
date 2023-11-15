@@ -13,6 +13,7 @@ namespace HideHud
 
         public ConfigEntry<bool> HidePauseMenu { get; private set; }
         public ConfigEntry<bool> HidePhone { get; private set; }
+        public ConfigEntry<bool> HideScreenEffects { get; private set; }
         public ConfigEntry<bool> HideDialogue { get; private set; }
         public ConfigEntry<bool> HideCypher { get; private set; }
         public ConfigEntry<bool> HideDanceWheel { get; private set; }
@@ -27,6 +28,7 @@ namespace HideHud
             ToggleKey = file.Bind(ConfigTitle, "Toggle Key", KeyCode.O);
             HidePauseMenu = file.Bind(ConfigTitle, "Hide Pause Menu", false);
             HidePhone = file.Bind(ConfigTitle, "Hide Phone UI", true);
+            HideScreenEffects = file.Bind(ConfigTitle, "Hide Screen Effects", true);
             HideDialogue = file.Bind(ConfigTitle, "Hide Dialogue UI", true);
             HideCypher = file.Bind(ConfigTitle, "Hide Character Select UI", true);
             HideDanceWheel = file.Bind(ConfigTitle, "Hide Dance Wheel", true);
